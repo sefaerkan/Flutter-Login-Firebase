@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loginui/screens/home_screen.dart';
+import 'package:loginui/screens/signup_screen.dart';
 import 'package:loginui/utilities/constants.dart';
+
+TextEditingController _passwordController = TextEditingController();
+TextEditingController _emailController = TextEditingController();
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -10,7 +16,46 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   bool _rememberMe = false;
+
+  Widget _buildLoginBtn() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 25.0),
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _emailController.text,
+            password: _passwordController.text,
+          ).then((value) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) =>HomeScreen()));
+          }).onError((error, stackTrace) {
+            print("Error ${error.toString()}");
+          });
+        },
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.all(15.0),
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          backgroundColor: Colors.white,
+        ),
+        child: Text(
+          "LOGIN",
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontFamily: "OpenSans",
+            fontWeight: FontWeight.bold,
+            fontSize: 18.0,
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _buildRememberCheckBox() {
     return Container(
@@ -38,6 +83,38 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  Widget _buildSignUpBtn() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) =>SignUpScreen()));
+      },
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: "Don\'t have an Account?",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            TextSpan(
+              text: " Sign Up",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +201,7 @@ Widget _buildEmailTF() {
         decoration: kBoxDecorationStyle,
         height: 60.0,
         child: TextField(
+          controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           style: TextStyle(
             color: Colors.white,
@@ -159,6 +237,7 @@ Widget _buildPasswordTF() {
         decoration: kBoxDecorationStyle,
         height: 60.0,
         child: TextField(
+          controller: _passwordController,
           obscureText: true,
           style: TextStyle(
             color: Colors.white,
@@ -188,34 +267,6 @@ Widget _buildForgotBtn() {
       child: Text(
         "Forgot Password?",
         style: kLabelStyle,
-      ),
-    ),
-  );
-}
-
-Widget _buildLoginBtn() {
-  return Container(
-    padding: EdgeInsets.symmetric(vertical: 25.0),
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.all(15.0),
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        backgroundColor: Colors.white,
-      ),
-      child: Text(
-        "LOGIN",
-        style: TextStyle(
-          color: Color(0xFF527DAA),
-          letterSpacing: 1.5,
-          fontFamily: "OpenSans",
-          fontWeight: FontWeight.bold,
-          fontSize: 18.0,
-        ),
       ),
     ),
   );
@@ -276,31 +327,5 @@ Widget _buildSocialBtnRow() {
   );
 }
 
-Widget _buildSignUpBtn() {
-  return GestureDetector(
-    onTap: () {},
-    child: RichText(
-      text: TextSpan(
-        children: [
-          TextSpan(
-            text: "Don\'t have an Account?",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.0,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          TextSpan(
-            text: " Sign Up",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
+
 
