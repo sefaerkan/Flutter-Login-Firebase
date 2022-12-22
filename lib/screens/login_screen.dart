@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loginui/google_auth.dart';
 import 'package:loginui/screens/home_screen.dart';
 import 'package:loginui/screens/signup_screen.dart';
 import 'package:loginui/utilities/constants.dart';
@@ -29,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
             email: _emailController.text,
             password: _passwordController.text,
           ).then((value) {
-            Navigator.push(context,
+            Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) =>HomeScreen()));
           }).onError((error, stackTrace) {
             print("Error ${error.toString()}");
@@ -109,6 +110,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSocialBtnRow() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 30.0),
+      child: GestureDetector(
+        onTap: () {
+          signInWithGoogle(context);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            _buildSocialBtn(() {}, AssetImage("assets/logos/google.jpg")),
           ],
         ),
       ),
@@ -314,18 +332,7 @@ Widget _buildSocialBtn(Function onTap, AssetImage logo) {
   );
 }
 
-Widget _buildSocialBtnRow() {
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 30.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        _buildSocialBtn(() {}, AssetImage("assets/logos/facebook.jpg")),
-        _buildSocialBtn(() {}, AssetImage("assets/logos/google.jpg")),
-      ],
-    ),
-  );
-}
+
 
 
 
